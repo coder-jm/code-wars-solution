@@ -8,8 +8,7 @@ vehicleTypeNumber = [0, 0 , 0]
 serialPlateNumbers = []
 feesPerSecond = 0.001
 yAxis = np.arange(len(vehicleTypes))
-password = 'joel'
-
+password = 'ipark123'
 
 vehiclePark = {'M1' : [] , 'M2' : [] , 'M3' : [] , 'M4' : [] , 'M5' : [] , 'M6' : [] , 'M7' : [] , 'M8' : [] , 'M9' : [] , 'M10' : [] , 'T1' : [] , 'T2' : [] , 'T3' : [] , 'T4' : [] , 'T5' : [] , 'T6' : [] , 'T7' : [] , 'T8' : [] , 'T9' : [] , 'T10' : [] , 'C1' : [] , 'C2' : [] , 'C3' : [] , 'C4' : [] , 'C5' : [] , 'C6' : [] , 'C7' : [] , 'C8' : [] , 'C9' : [] , 'C10' : [] }
 
@@ -30,23 +29,24 @@ def addVehicle(vehicleName , vehicleType , serialPlateNumber) :
         else:
             vehicleTypeNumber[2] += 1
 
-        serialPlateNumbers.append(serialPlateNumber)
+        serialPlateNumbers.append(int(serialPlateNumber))
         startingTime = time.time().__round__()
         date = time.ctime()
         for i in list(vehiclePark.items()):
             if i[0][0] == vehicleParkLetter:
                 if len(i[1]) == 0:
                     vehicleSlotFound = True
-                    i[1].extend([vehicleName , vehicleType , date, vehicleParkLetter,   startingTime , serialPlateNumber])
+                    i[1].extend([vehicleName , vehicleType , date, vehicleParkLetter,   startingTime , int(serialPlateNumber)])
                     break
         if not vehicleSlotFound :
-            print("Slots for " , vehicleType , "s are filled. Please try again" )
+            print("Slots for " + str(vehicleType) + "s are filled. Please try later" )
 
 def removeVehicle(serialPlateNumber):
+    serialPlateNumber = int(serialPlateNumber)
     if serialPlateNumber in serialPlateNumbers:
         for i in vehiclePark:
             if len(vehiclePark[i]) > 0 :
-                if vehiclePark[i][5] == serialPlateNumber :
+                if vehiclePark[i][5] == int(serialPlateNumber) :
                     vehicleParkLetter = vehiclePark[i][3]
                     if vehicleParkLetter == "M" :
                         vehicleTypeNumber[0] -= 1
@@ -57,7 +57,7 @@ def removeVehicle(serialPlateNumber):
                     serialPlateNumbers.remove(serialPlateNumber)
                     st = vehiclePark[i][4]
                     vehiclePark[i] = []
-                    print("Duration: " , (time.time().__round__() - st ) , " seconds.  Fees: " , (time.time().__round__() - st ) * feesPerSecond)
+                    print("Duration: " , (time.time().__round__() - st ) , " seconds.  Fees: " , ((time.time().__round__() - st ) * feesPerSecond).__round__() , " Rial")
                     
                     break
     else :
@@ -108,6 +108,7 @@ i = get vehicle details
 e = exit the program
     """)
 
+
 while not exit:
     print("")
     inp = input("Input: ")
@@ -115,12 +116,12 @@ while not exit:
     inp = inp.lower().strip()
 
     if inp == 'a':
-        n = input("Enter vehicle's name ")
-        t = input("Enter vehicle's type ")
-        s = input("Enter vehicle's serial plate number ")
+        n = input("Enter vehicle's name: ")
+        t = input("Enter vehicle's type: ")
+        s = input("Enter vehicle's serial plate number: ")
         addVehicle(n , t ,s)
     elif inp == 'r':
-        s = input("Enter vehicle's serial plate number ")
+        s = input("Enter vehicle's serial plate number: ")
         removeVehicle(s)
     elif inp == 'g':
         user_pass = input("Passcode: ")
@@ -148,3 +149,4 @@ while not exit:
         exit = True 
     else:
         print("Invalid user input")
+    
