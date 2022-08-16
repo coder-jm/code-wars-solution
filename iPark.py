@@ -9,6 +9,7 @@ vehicleTypeNumber = [0, 0 , 0]
 serialPlateNumbers = []
 feesPerSecond = 0.000001
 yAxis = np.arange(len(vehicleTypes))
+password = 'joel'
 
 date_time = datetime.datetime.now()
 today = date_time.strftime("%d/%m/%Y")
@@ -22,8 +23,8 @@ def addVehicle(vehicleName , vehicleType , serialPlateNumber) :
 
     if serialPlateNumber in serialPlateNumbers:
         print("Invalid serial plate number.")
-    elif vehicleParkLetter not in vehicleTypeCodes:
-        print("Invalid vehicle type.")
+    elif vehicleType.lower().strip() not in ["motorcycle" , "car" , "truck"]:
+        print("Invalid vehicle type")
     else :
         if vehicleParkLetter == "M" :
             vehicleTypeNumber[0] += 1
@@ -33,7 +34,7 @@ def addVehicle(vehicleName , vehicleType , serialPlateNumber) :
             vehicleTypeNumber[2] += 1
 
         serialPlateNumbers.append(serialPlateNumber)
-        startingTime = time.time()
+        startingTime = time.time().__round__()
         date = today
         for i in list(vehiclePark.items()):
             if i[0][0] == vehicleParkLetter:
@@ -59,17 +60,34 @@ def removeVehicle(serialPlateNumber):
                     serialPlateNumbers.remove(serialPlateNumber)
                     st = vehiclePark[i][4]
                     vehiclePark[i] = []
-                    print("Fees: " , (time.time() - st) * feesPerSecond)
+                    print("Time spent in lot: " , (time.time().__round__() - st ) , 'seconds' )
                     
                     break
     else :
         print("Invalid Serial Plate number.")
     
 def showSummary():
+    firstArray = []
+    secondArray = []
+    thirdArray = []
+    fullArray = []
+
     for v in vehiclePark:
         if vehiclePark[v] != []:
-            print("Slot: " , v , " Name: " , vehiclePark[v][0] , " Type: " , vehiclePark[v][1] ," Date : " , vehiclePark[v][0] ," Time: " , vehiclePark[v][0] ," Serial Plate: " , vehiclePark[v][0] , ) 
-            print("")
+            fullArray.append([v])
+        else:
+            fullArray.append(['  '])
+
+    firstArray = fullArray[:10]
+    secondArray = fullArray[10:20]
+    thirdArray = fullArray[20:]
+        
+
+    print("|-------------------------------------------------------------------------------|")
+    print(firstArray)
+    print(secondArray)
+    print(thirdArray)
+    print("|-------------------------------------------------------------------------------|")
 
 def showGraph():
     plt.xticks(yAxis, vehicleTypes)
@@ -79,13 +97,54 @@ def showGraph():
     plt.show()
 
 
-#test cases 
+exit = False 
 
-addVehicle('Toyota' , 'car' , 6969)
-addVehicle('Toyota' , 'car' , 6959)
-addVehicle('Royal Enfield' , 'motorcycle', 4204)
-addVehicle('Tesla' , 'truck', 8146)
-addVehicle('Tesla' , 'truck', 5146)
-addVehicle('Tesla' , 'truck', 8446)
-showSummary()
-showGraph()
+print("Welcome to the iPark system")
+print("Here is the menu")
+
+print("""
+a = add a vehicle
+r = remove a vehicle
+g = view parking lot bar graph
+p = view parking lot representation
+i = get vehicle details
+e = exit the program
+    """)
+    
+while not exit:
+    print("")
+    inp = input("Input: ")
+    print("")
+    inp = inp.lower().strip()
+
+    if inp == 'a':
+        n = input("Enter vehicle's name ")
+        t = input("Enter vehicle's type ")
+        s = input("Enter vehicle's serial number ")
+        addVehicle(n , t ,s)
+    elif inp == 'r':
+        s = input("Enter vehicle's serial number ")
+        removeVehicle(s)
+    elif inp == 'g':
+        user_pass = input("Passcode: ")
+        if user_pass.lower().strip() == password:
+            showGraph()
+        else:
+            print("Incorrect password")
+    elif inp == 'p':
+        showSummary()
+    elif inp == 'i':
+        user_pass = input("Passcode: ")
+        if user_pass.lower().strip() == password:
+            slot = input("Enter vehicle slot: ")
+            try :
+                print(vehiclePark[slot])
+            except KeyError:
+                print("Invalid Slot")
+        else:
+            print("Incorrect password")
+    elif inp == 'e':
+        print("Thank you ")
+        exit = True 
+    else:
+        print("Invalid user input")
