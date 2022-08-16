@@ -16,12 +16,12 @@ def addVehicle(vehicleName , vehicleType , serialPlateNumber) :
     v = vehicleType.capitalize().strip()
     vehicleParkLetter = v[0: 1]
     vehicleSlotFound = False
-
     if serialPlateNumber in serialPlateNumbers:
         print("Invalid serial plate number.")
     elif vehicleType.lower().strip() not in ["motorcycle" , "car" , "truck"]:
         print("Invalid vehicle type")
     else :
+        serialPlateNumbers.append(serialPlateNumber)
         if vehicleParkLetter == "M" :
             vehicleTypeNumber[0] += 1
         elif vehicleParkLetter == "C" :
@@ -29,24 +29,22 @@ def addVehicle(vehicleName , vehicleType , serialPlateNumber) :
         else:
             vehicleTypeNumber[2] += 1
 
-        serialPlateNumbers.append(int(serialPlateNumber))
         startingTime = time.time().__round__()
         date = time.ctime()
         for i in list(vehiclePark.items()):
             if i[0][0] == vehicleParkLetter:
                 if len(i[1]) == 0:
                     vehicleSlotFound = True
-                    i[1].extend([vehicleName , vehicleType , date, vehicleParkLetter,   startingTime , int(serialPlateNumber)])
+                    i[1].extend([vehicleName , vehicleType , date, vehicleParkLetter,   startingTime , serialPlateNumber])
                     break
         if not vehicleSlotFound :
             print("Slots for " + str(vehicleType) + "s are filled. Please try later" )
 
 def removeVehicle(serialPlateNumber):
-    serialPlateNumber = int(serialPlateNumber)
     if serialPlateNumber in serialPlateNumbers:
         for i in vehiclePark:
             if len(vehiclePark[i]) > 0 :
-                if vehiclePark[i][5] == int(serialPlateNumber) :
+                if vehiclePark[i][5] == serialPlateNumber :
                     vehicleParkLetter = vehiclePark[i][3]
                     if vehicleParkLetter == "M" :
                         vehicleTypeNumber[0] -= 1
@@ -149,4 +147,3 @@ while not exit:
         exit = True 
     else:
         print("Invalid user input")
-    
