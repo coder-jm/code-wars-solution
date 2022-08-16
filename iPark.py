@@ -57,7 +57,7 @@ def removeVehicle(serialPlateNumber):
                     serialPlateNumbers.remove(serialPlateNumber)
                     st = vehiclePark[i][4]
                     vehiclePark[i] = []
-                    print("Duration: " , (time.time().__round__() - st ) , " seconds.  Fees: " , ((time.time().__round__() - st ) * feesPerSecond).__round__() , " Rial")
+                    print("Duration: " , (time.time().__round__() - st ) , " seconds.  Fees: " , ((time.time().__round__() - st ) * feesPerSecond).__round__(3) , " Rial")
                     
                     break
     else :
