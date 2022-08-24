@@ -5,6 +5,7 @@ import numpy as np
 vehicleTypes = ["Motorcycle", "Car" , "Truck"]
 vehicleTypeCodes = ['M', 'C', 'T']
 vehicleTypeNumber = [0, 0 , 0]
+
 serialPlateNumbers = []
 feesPerSecond = 0.001
 yAxis = np.arange(len(vehicleTypes))
@@ -14,10 +15,12 @@ vehiclePark = {'M1' : [] , 'M2' : [] , 'M3' : [] , 'M4' : [] , 'M5' : [] , 'M6' 
 
 def addVehicle(vehicleName , vehicleType , serialPlateNumber) :
     v = vehicleType.capitalize().strip()
+    #motorcycle => MOTORCYCLE
     vehicleParkLetter = v[0: 1]
+    #MOTORCYCLE => M
     vehicleSlotFound = False
     if serialPlateNumber in serialPlateNumbers:
-        print("Invalid serial plate number.")
+        print("Already parked.")
     elif vehicleType.lower().strip() not in ["motorcycle" , "car" , "truck"]:
         print("Invalid vehicle type")
     else :
@@ -32,6 +35,7 @@ def addVehicle(vehicleName , vehicleType , serialPlateNumber) :
         startingTime = time.time().__round__()
         date = time.ctime()
         for i in list(vehiclePark.items()):
+            #[('C1', []), ('C2', []) , ....]
             if i[0][0] == vehicleParkLetter:
                 if len(i[1]) == 0:
                     vehicleSlotFound = True
@@ -44,6 +48,7 @@ def removeVehicle(serialPlateNumber):
     if serialPlateNumber in serialPlateNumbers:
         for i in vehiclePark:
             if len(vehiclePark[i]) > 0 :
+                #{'C1' : ['Toyota' , 'car' ,8/ 20/445 , 'C', 120940923, '1123']), 'C2': [], ....}
                 if vehiclePark[i][5] == serialPlateNumber :
                     vehicleParkLetter = vehiclePark[i][3]
                     if vehicleParkLetter == "M" :
@@ -70,8 +75,10 @@ def showSummary():
     for v in vehiclePark:
         if vehiclePark[v] != []:
             fullArray.append([v])
+            #this will append ['M1'] for example
         else:
             fullArray.append(['  '])
+            #this will append [' ']
 
     firstArray = fullArray[:10]
     secondArray = fullArray[10:20]
@@ -100,9 +107,8 @@ print("Here is the menu")
 print("""
 a = add a vehicle
 r = remove a vehicle
+i = display vehicle details
 g = view parking lot bar graph
-p = view parking lot representation
-i = get vehicle details
 e = exit the program
     """)
 
@@ -118,6 +124,7 @@ while not exit:
         t = input("Enter vehicle's type: ")
         s = input("Enter vehicle's serial plate number: ")
         addVehicle(n , t ,s)
+        showSummary()
     elif inp == 'r':
         s = input("Enter vehicle's serial plate number: ")
         removeVehicle(s)
@@ -127,8 +134,7 @@ while not exit:
             showGraph()
         else:
             print("Incorrect password")
-    elif inp == 'p':
-        showSummary()
+        
     elif inp == 'i':
         user_pass = input("Passcode: ")
         if user_pass.lower().strip() == password:
